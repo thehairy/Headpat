@@ -1,5 +1,5 @@
-const wsURL = "wss://headpat.tentti.xyz/ws";
-//const wsURL = "ws://192.168.0.158:5001"; This is for local dev, don't mind it.
+const wsURL = "wss://headpat.tentti.xyz/";
+//const wsURL = "ws://localhost:5000"; //This is for local dev, don't mind it.
 let ws = new WebSocket(wsURL);
 ws.onopen = onOpen;
 ws.onmessage = onMessage;
@@ -139,7 +139,7 @@ function hideToast(){
     toast.className = "";
 }
 
-document.addEventListener("click",function(event){
+document.addEventListener("click",function(){
     const ctxMenu = document.getElementById("messageCtx");
     ctxMenu.style.display = "";
     ctxMenu.style.left = "";

@@ -32,19 +32,18 @@ app.use("/", indexRouter);
 /* ------------- DATABASE ------------- */
 
 import {initDatabase} from "./automation/database";
-
 initDatabase();
-
-/* ------------- WEBSOCKET ------------- */
-import {init} from "./automation/websocket";
-init();
 
 /* ------------- START ------------- */
 
-app.listen(port, ()=>{
+const srv = app.listen(port, ()=>{
     console.log(`Running...
 Running at: http://localhost:${port}`);
 });
+
+/* ------------- WEBSOCKET ------------- */
+import {init} from "./automation/websocket";
+init(srv);
 
 process.on("uncaughtException", (e)=>{
     console.log(`Exception; ${e}`);

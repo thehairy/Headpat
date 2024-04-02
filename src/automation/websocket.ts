@@ -7,17 +7,23 @@ import Server from "../structs/Server";
 import {getUser} from "./usermanager";
 import Message from "../structs/Message";
 import Channel from "../structs/Channel";
-import {compare, hash} from "bcrypt";
+import {compare} from "bcrypt";
 import {updatePass} from "./authmanager";
 
 let server;
 //Remember to increment this when publishing an update to enforce a reload of clients.
-const version = "1.0.1_000";
+const version = "1.0.2_001";
 
-const init = ()=>{
+const init = (srv)=>{
     server = new WebSocketServer({
-        port: parseInt(process.env.WSPORT as string),
+        noServer: true,
         perMessageDeflate: false
+    });
+
+    srv.on("upgrade", (req, socket, head) => {
+        server.handleUpgrade(req, socket, head, (ws) => {
+           server.emit("connection", ws, req);
+        });
     });
 
     const connections = new Map();
@@ -110,8 +116,10 @@ const init = ()=>{
                             error: "Message data not a match."
                         }));
                     });
+                    break;
                 case "UPD_PRF":
                     return updateProfile(event, ws);
+
             }
         });
 
