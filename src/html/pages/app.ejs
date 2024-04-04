@@ -19,29 +19,34 @@
     Headpat is Work In Progress. Expect glitches, bugs and faults.<br>
     ~ Ten
 </div>
-<div id="container">
-    <div id="servers">
-        <h2 class="no-select">Servers</h2>
+<div class="flex-container" id="container">
+    <div class="flex-items" id="servers">
+        <h2 class="no-select">SRVS</h2>
         <div id="serverContainer">
             <div class="server">DEV</div>
         </div>
     </div>
-    <div id="channels">
+    <div class="flex-items" id="channels">
         <h2 class="no-select">Channels</h2>
         <div id="channelContainer">
             <div class="channel">DEV</div>
         </div>
     </div>
-    <div id="messages">
+    <div class="flex-items" id="messages">
         <div id="messageContainer">
         </div>
-        <div style="flex-grow: 1;"></div>
-        <input type="search" autocomplete="one-time-code" id="messageField" class="text-input" placeholder="Type your message...">
     </div>
-    <div id="user-list">
+    <div class="flex-items" id="user-list">
         <h2 class="no-select">User List</h2>
         <div id="userContainer">
         </div>
+    </div>
+</div>
+<div class="flex-container2" id="container2">
+    <div class="flex-items" id="user">
+    </div>
+    <div class="flex-items" id="messagesender">
+        <input type="search" autocomplete="one-time-code" id="messageField" class="text-input" placeholder="Type your message...">
     </div>
 </div>
 <%- include("./user_profile"); %>

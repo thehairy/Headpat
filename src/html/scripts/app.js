@@ -14,6 +14,7 @@ const closeDanger = document.getElementById("close-danger");
 const messageField = document.getElementById("messageField");
 const messageContainer = document.getElementById("messageContainer");
 const userContainer = document.getElementById("userContainer");
+const userProfile = document.getElementById("user");
 
 function onOpen(){
     ws.send("");
@@ -115,6 +116,10 @@ ${DOMPurify.sanitize(linkifyHtml(msg.content, {target: "_blank"}),{ ALLOWED_TAGS
             },false);
         });
     }
+    if(eventData.data.user){
+        userProfile.innerHTML = `<img style="float: left; border-radius: 50%;" src="/resource/user/${eventData.data.user.ID}" loading="lazy" width="48" height="48" decoding="async" data-nimg="1" style="color: transparent;">
+<h2 style="float: left;" className="no-select">${eventData.data.user.username}#${eventData.data.user.discriminator??"0"}</h2>`;
+    }
 }
 
 function message(eventData){
@@ -213,10 +218,9 @@ document.getElementById("logoutbutton").onclick = () =>{
 };
 
 document.getElementById("user-profile").style.setProperty("display", "none", "important");
-//This'll be reimplemented once I have the profile block created.
-/*document.getElementById("profile_popup").onclick = ()=>{
+document.getElementById("user").onclick = ()=>{
     document.getElementById("user-profile").style.setProperty("display", "flex", "important");
-}*/
+}
 
 document.getElementById("close-profile").onclick = ()=>{
     document.getElementById("user-profile").style.setProperty("display", "none", "important");
@@ -251,10 +255,10 @@ document.getElementById("save_profile").onclick = ()=>{
         data
     }));
 }
-
+document.getElementById("messageContainer").scrollTop = document.getElementById("messageContainer").scrollHeight;
 function moveChat(){
     let temp = document.getElementById("messageContainer");
-    if(temp.scrollTop === (temp.scrollHeight - temp.offsetHeight)){
+    if((temp.scrollHeight - temp.clientHeight) <= (temp.scrollTop + 10)){
         temp.scrollTop = temp.scrollHeight;
     }
 }
