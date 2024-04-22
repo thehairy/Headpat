@@ -38,6 +38,8 @@ function onMessage(event){
             clearTimeout(heart);
             heart = setInterval(sendHeartbeat, 5000);
             if(version === "") {version = eventData.data.version;}
+            userProfile.innerHTML = `<img style="float: left; border-radius: 50%;" src="/resource/user/${eventData.data.user.ID}" loading="lazy" width="48" height="48" decoding="async" data-nimg="1" style="color: transparent;">
+<h2 style="float: left;" className="no-select">${eventData.data.user.username}#${eventData.data.user.discriminator??"0"}</h2>`;
             ws.send(JSON.stringify({opCode: "GET_MEM"}));
             ws.send(JSON.stringify({opCode: "GET_MSG"}));
             //Intentional fallthrough.
