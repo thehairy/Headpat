@@ -1,5 +1,5 @@
 import WebsocketEvent from "../../structs/WebsocketEvent";
-import {connectionHeartbeat, getConnection} from "../connectionmanager";
+import {connectionHeartbeat} from "../connectionmanager";
 
 export default class Heartbeat extends WebsocketEvent {
     constructor() {

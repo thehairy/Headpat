@@ -15,6 +15,10 @@ function getConnection(id: string){
     return connections.get(id);
 }
 
+function getConnectionIDs(): string[] {
+    return Array.from(connections.keys());
+}
+
 function connectionHeartbeat(id: string){
     let a = connections.get(id);
     a.heartbeat = Date.now();
@@ -35,5 +39,6 @@ export {
     hasConnection,
     setConnection,
     getConnection,
-    connectionHeartbeat
+    connectionHeartbeat,
+    getConnectionIDs
 }

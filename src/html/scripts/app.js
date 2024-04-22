@@ -1,5 +1,5 @@
-const wsURL = "wss://headpat.tentti.xyz/";
-//const wsURL = "ws://localhost:5000"; //This is for local dev, don't mind it.
+//const wsURL = "wss://headpat.tentti.xyz/";
+const wsURL = "ws://localhost:5000"; //This is for local dev, don't mind it.
 let ws = new WebSocket(wsURL);
 ws.onopen = onOpen;
 ws.onmessage = onMessage;
@@ -38,9 +38,53 @@ function onMessage(event){
             clearTimeout(heart);
             heart = setInterval(sendHeartbeat, 5000);
             if(version === "") {version = eventData.data.version;}
+            ws.send(JSON.stringify({opCode: "GET_MEM"}));
+            ws.send(JSON.stringify({opCode: "GET_MSG"}));
             //Intentional fallthrough.
         case "HRT":
-            heartbeatR(eventData);
+            if(eventData.data.version !== version){
+                showToast("Version out of date, reloading in 5 seconds...");
+                return setTimeout(()=>{
+                    location.reload();
+                }, 5000);
+            }
+            break;
+        case "GET_MEM":
+            userContainer.innerHTML = "";
+            eventData.data.memberList
+                .sort((a,b) => {
+                    const x = ["ONLINE","OFFLINE"];
+                    return x.indexOf(a.online) - x.indexOf(b.online);
+                })
+                .forEach(entry => {
+                    userStore[entry.user.ID] = entry.user;
+                    userContainer.innerHTML += `<div class="user ${entry.online}" id="${entry.user.ID}">${entry.user.username}</div>`;
+                });
+            break;
+        case "GET_MSG":
+            messageContainer.innerHTML = eventData.data.messages.map(msg => `<div class="message" id="${msg.ID}">
+<pre>
+${userStore[msg.userID]?.username ?? msg.userID}・${parseTimestamp(msg.createdAt)}
+${DOMPurify.sanitize(linkifyHtml(msg.content, {target: "_blank"}),{ ALLOWED_TAGS: ['a'], ALLOWED_ATTR: ['target','href'] })}
+</pre></div>`).join("");
+            eventData.data.messages.map(msg => {
+                const htmlMsg = document.getElementById(msg.ID);
+                htmlMsg.addEventListener("contextmenu",function(event){
+                    event.preventDefault();
+                    const ctxMenu = document.getElementById("messageCtx");
+                    if(ctxMenu["data-messageID"] === msg.ID){
+                        ctxMenu.style.display = "";
+                        ctxMenu.style.left = "";
+                        ctxMenu.style.top = "";
+                        ctxMenu["data-messageID"] = "";
+                        return;
+                    }
+                    ctxMenu.style.display = "block";
+                    ctxMenu.style.left = (event.pageX - 10)+"px";
+                    ctxMenu.style.top = (event.pageY - 10)+"px";
+                    ctxMenu["data-messageID"] = msg.ID;
+                },false);
+            });
             break;
         case "DEL_MSG":
             if("messageID" in eventData.data){
@@ -69,57 +113,6 @@ function parseTimestamp(timestamp){
         return `Yesterday at ${clock}`;
     } else {
         return `${calendar} ${clock}`;
-    }
-}
-
-//This bad boy is responsible for updating the view.
-function heartbeatR(eventData){
-    if(eventData.data.version !== version){
-        showToast("Version out of date, reloading in 5 seconds...");
-        return setTimeout(()=>{
-            location.reload();
-        }, 5000);
-    }
-    if(eventData.data.userList){
-        userContainer.innerHTML = "";
-        eventData.data.userList
-            .sort((a,b) => {
-                const x = ["ONLINE","OFFLINE"];
-                return x.indexOf(a.online) - x.indexOf(b.online);
-            })
-            .forEach(entry => {
-                userStore[entry.user.ID] = entry.user;
-                userContainer.innerHTML += `<div class="user ${entry.online}" id="${entry.user.ID}">${entry.user.username}</div>`;
-            });
-    }
-    if(eventData.data.messages){
-        messageContainer.innerHTML = eventData.data.messages.map(msg => `<div class="message" id="${msg.ID}">
-<pre>
-${userStore[msg.userID]?.username ?? msg.userID}・${parseTimestamp(msg.createdAt)}
-${DOMPurify.sanitize(linkifyHtml(msg.content, {target: "_blank"}),{ ALLOWED_TAGS: ['a'], ALLOWED_ATTR: ['target','href'] })}
-</pre></div>`).join("");
-        eventData.data.messages.map(msg => {
-            const htmlMsg = document.getElementById(msg.ID);
-            htmlMsg.addEventListener("contextmenu",function(event){
-                event.preventDefault();
-                const ctxMenu = document.getElementById("messageCtx");
-                if(ctxMenu["data-messageID"] === msg.ID){
-                    ctxMenu.style.display = "";
-                    ctxMenu.style.left = "";
-                    ctxMenu.style.top = "";
-                    ctxMenu["data-messageID"] = "";
-                    return;
-                }
-                ctxMenu.style.display = "block";
-                ctxMenu.style.left = (event.pageX - 10)+"px";
-                ctxMenu.style.top = (event.pageY - 10)+"px";
-                ctxMenu["data-messageID"] = msg.ID;
-            },false);
-        });
-    }
-    if(eventData.data.user){
-        userProfile.innerHTML = `<img style="float: left; border-radius: 50%;" src="/resource/user/${eventData.data.user.ID}" loading="lazy" width="48" height="48" decoding="async" data-nimg="1" style="color: transparent;">
-<h2 style="float: left;" className="no-select">${eventData.data.user.username}#${eventData.data.user.discriminator??"0"}</h2>`;
     }
 }
 

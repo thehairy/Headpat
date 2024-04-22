@@ -23,8 +23,6 @@ const init = async (srv)=>{
         });
     });
 
-
-
     server.on("connection", (ws, req)=>{
         ws.on("error", console.error);
         ws.on("message", (event)=>{
@@ -33,7 +31,7 @@ const init = async (srv)=>{
             try { event = JSON.parse(event.toString()); } catch(e) { return; }
             const wsEvent = events.get(event.opCode);
             if(!wsEvent) return;
-            wsEvent.exec(event,ws,{version, server});
+            wsEvent.exec(event, ws,{version, server});
         });
 
         let auth = "";
@@ -45,6 +43,7 @@ const init = async (srv)=>{
             if(payload.iss !== "urn:Headpat:axiom" || payload.aud !== "urn:Headpat:users") return ws.close();
             const inspect = await readDatabase("auth",payload.id) as Auth;
             if(payload.session !== inspect.sessionSecret) return ws.close();
+
             ws.tid = payload.id;
             ws.tses = payload.session;
             ws.currentServer = "0";
