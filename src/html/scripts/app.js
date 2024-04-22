@@ -1,5 +1,5 @@
-//const wsURL = "wss://headpat.tentti.xyz/";
-const wsURL = "ws://localhost:5000"; //This is for local dev, don't mind it.
+const wsURL = "wss://headpat.tentti.xyz/";
+//const wsURL = "ws://localhost:5000"; //This is for local dev, don't mind it.
 let ws = new WebSocket(wsURL);
 ws.onopen = onOpen;
 ws.onmessage = onMessage;
