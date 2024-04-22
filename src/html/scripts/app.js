@@ -53,7 +53,8 @@ function onMessage(event){
             document.getElementById("username").value = eventData.data.user.username ?? "";
             document.getElementById("discriminator").value = eventData.data.user.discriminator ?? "";
             document.getElementById("email").placeholder = eventData.data.email ?? "";
-
+            userProfile.innerHTML = `<img style="float: left; border-radius: 50%;" src="/resource/user/${eventData.data.user.ID}" loading="lazy" width="48" height="48" decoding="async" data-nimg="1" style="color: transparent;">
+<h2 style="float: left;" className="no-select">${eventData.data.user.username}#${eventData.data.user.discriminator??"0"}</h2>`;
     }
 }
 
