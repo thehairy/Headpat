@@ -1,11 +1,10 @@
-const wsURL = "wss://headpat.tentti.xyz/";
-//const wsURL = "ws://localhost:5000"; //This is for local dev, don't mind it.
+const wsURL = `ws${location.host.startsWith("localhost")?"":"s"}://${location.host}`;
 let ws = new WebSocket(wsURL);
 ws.onopen = onOpen;
 ws.onmessage = onMessage;
 ws.onclose = onClose;
 ws.onerror = onError;
-let heart;
+let heart, memb;
 let version = "";
 
 let userStore = {};
@@ -19,6 +18,7 @@ const userProfile = document.getElementById("user");
 function onOpen(){
     ws.send("");
     heart = setInterval(sendHeartbeat, 5000);
+    memb = setInterval(getMembers,20*1000);
 }
 
 function onMessage(event){
@@ -36,7 +36,9 @@ function onMessage(event){
         case "ACK":
             hideToast();
             clearTimeout(heart);
+            clearTimeout(memb);
             heart = setInterval(sendHeartbeat, 5000);
+            memb = setInterval(getMembers,20*1000);
             if(version === "") {version = eventData.data.version;}
             userProfile.innerHTML = `<img style="float: left; border-radius: 50%;" src="/resource/user/${eventData.data.user.ID}" loading="lazy" width="48" height="48" decoding="async" data-nimg="1" style="color: transparent;">
 <h2 style="float: left;" className="no-select">${eventData.data.user.username}#${eventData.data.user.discriminator??"0"}</h2>`;
@@ -152,6 +154,7 @@ function onClose(){
     console.log("Closing connection.");
     ws.close();
     clearInterval(heart);
+    clearInterval(memb);
     showToast("Connection Lost, reconnecting...", true);
     setTimeout(reconnect, 5000);
 }
@@ -164,6 +167,12 @@ function onError(e){
 function sendHeartbeat(){
     ws.send(JSON.stringify({
         opCode: "HRT",
+    }));
+}
+
+function getMembers(){
+    ws.send(JSON.stringify({
+        opCode: "GET_MEM",
     }));
 }
 
