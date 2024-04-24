@@ -110,3 +110,27 @@ html body {
     border-radius: 0.25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
+
+.btnsso {
+    text-align: center;
+    display: inline-block;
+}
+
+.btnsso:hover {
+    cursor: pointer;
+}
+
+.blurple {
+    background-color: #5865F2;
+    color: white !important;
+}
+
+.blurple:hover {
+    background-color: #434db4;
+    color: #b7b7b7 !important;
+}
+
+.blurpletext {
+    text-decoration: none;
+    color: rgb(209, 205, 199) !important;
+}

@@ -22,11 +22,13 @@ import registerRouter from "./routers/register";
 import appRouter from "./routers/app";
 import logoutRouter from "./routers/logout";
 import indexRouter from "./routers";
+import oauthRouter from "./routers/oauth";
 app.use("/login", loginRouter);
 app.use("/resource", resourceRouter);
 app.use("/register", registerRouter);
 app.use("/app", appRouter);
 app.use("/logout", logoutRouter);
+app.use("/oauth", oauthRouter);
 app.use("/", indexRouter);
 
 /* ------------- DATABASE ------------- */

@@ -15,7 +15,7 @@ loginRouter.post("/", async (req, res)=>{
     const auth = await getAuth(req.body.email);
     if(auth === null) return res.json({error: "INVALID_CREDENTIALS"});
 
-    const validPass = await compare(req.body.password, auth.passHash);
+    const validPass = await compare(req.body.password, auth.passHash!);
     if(!validPass) return res.json({error: "INVALID_CREDENTIALS"});
 
     if(auth.tfaSecret !== "" && !req.body.tfa) return res.json({data: "2FA_REQUIRED"});
