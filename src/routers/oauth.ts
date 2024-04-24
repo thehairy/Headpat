@@ -51,7 +51,7 @@ oauthRouter.get("/discord", async (req, res)=>{
                 .setIssuer("urn:Headpat:axiom")
                 .setAudience("urn:Headpat:users")
                 .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
-            res.cookie("auth",jwt).redirect("/app");
+            res.cookie("auth",jwt, {maxAge: 1000*60*60*24*30}).redirect("/app");
         });
     });
 });
