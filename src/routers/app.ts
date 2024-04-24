@@ -11,9 +11,10 @@ appRouter.get("/", (req, res)=>{
     jwtVerify(req.cookies.auth, new TextEncoder().encode(process.env.JWT_SECRET as string)).then(async jwtData => {
         const payload = jwtData.payload;
         if(payload.iss !== "urn:Headpat:axiom" || payload.aud !== "urn:Headpat:users") return res.clearCookie("auth").redirect("/");
-        const user = await getUser(payload.id);
         const auth: Auth | null = await readDatabase("auth",payload.id) as Auth;
-        if(!user || !auth) return res.clearCookie("auth").redirect("/");
+        if(!auth) return res.clearCookie("auth").redirect("/");
+        const user = await getUser(payload.id);
+        if(!user) return res.clearCookie("auth").redirect("/");
         res.render("app.ejs", {user});
     }).catch(() => res.clearCookie("auth").redirect("/"));
 });
