@@ -32,6 +32,7 @@ const createUser = async (id): Promise<User> => {
             username: "Nya",
             discriminator: await findFreeDiscriminator("Nya"),
             role: "MEMBER",
+            discriminator: await findFreeDiscriminator("Nya"),
             createdAt: Date.now().toString(),
             servers: ["0"]
         };

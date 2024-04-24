@@ -77,7 +77,8 @@ html body {
 
 .btn {
     background-color: #0d6efd !important;
-    color: rgb(209, 205, 199) !important;
+    color: #ffffff !important;
+    cursor: pointer;
 }
 
 #overlay {
@@ -116,10 +117,6 @@ html body {
     display: inline-block;
 }
 
-.btnsso:hover {
-    cursor: pointer;
-}
-
 .blurple {
     background-color: #5865F2;
     color: white !important;
@@ -127,10 +124,4 @@ html body {
 
 .blurple:hover {
     background-color: #434db4;
-    color: #b7b7b7 !important;
-}
-
-.blurpletext {
-    text-decoration: none;
-    color: rgb(209, 205, 199) !important;
 }
