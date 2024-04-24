@@ -30,6 +30,7 @@ const createUser = async (id): Promise<User> => {
         const user = {
             ID: id,
             username: "Nya",
+            discriminator: await findFreeDiscriminator("Nya"),
             role: "MEMBER",
             createdAt: Date.now().toString(),
             servers: ["0"]
@@ -42,6 +43,18 @@ const createUser = async (id): Promise<User> => {
         res(user);
     });
 };
+
+const findFreeDiscriminator = (name) => {
+    return new Promise(async res => {
+        let newDisc = Math.floor(1000 + Math.random() * 9000);
+        for await (const [key, value] of rawDatabase("users")!.iterator()) {
+            if(value.name === name){
+                if(value.discriminator === newDisc) return res(findFreeDiscriminator(name));
+            }
+        }
+        return res(newDisc);
+    });
+}
 
 export {
     getUser,
