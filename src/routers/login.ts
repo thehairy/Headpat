@@ -8,7 +8,7 @@ const loginRouter = Router();
 
 loginRouter.get("/", (req, res)=>{
     if(req.cookies.auth) return res.redirect("/app");
-    res.render("login.ejs", {});
+    res.render("login.ejs", {domain: `${req.protocol}://${req.get("host")}/oauth/discord`});
 });
 
 loginRouter.post("/", async (req, res)=>{
