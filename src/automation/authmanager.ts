@@ -17,7 +17,7 @@ const getSSOAuth = (ssoID): Promise<Auth|null> => {
     return new Promise(async (res, rej)=>{
         const authDB = rawDatabase("auth");
         for await (const [key, value] of authDB!.iterator()) {
-            if(value.ssoID === ssoID) return res(value as Auth);
+            if(value.ssoID !== undefined && value.ssoID === ssoID) return res(value as Auth);
         }
         return res(null);
     });

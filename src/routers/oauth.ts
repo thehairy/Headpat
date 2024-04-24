@@ -18,10 +18,18 @@ oauthRouter.get("/discord", async (req, res)=>{
         method: "POST",
         headers: {"Content-Type":"application/x-www-form-urlencoded"},
         body: data
-    }).then(x => x.json()).then((x: Tokens) => {
+    }).then(x => x.json()).then(x => {
+        if(x.access_token === undefined) {
+            console.log("NO TOKEN!");
+            return res.redirect("/login");
+        }
         fetch("https://discord.com/api/users/@me", {
             headers: {"authorization": `${x.token_type} ${x.access_token}`}
-        }).then(y => y.json()).then(async (y: dcuser) => {
+        }).then(y => y.json()).then(async y => {
+            if(y.id === undefined) {
+                console.log("NO UID!");
+                return res.redirect("/login");
+            }
             let auth = await getSSOAuth(y.id);
             if(auth === null) {
                 const ID = "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (parseInt(c) ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> parseInt(c) / 4).toString(16));
