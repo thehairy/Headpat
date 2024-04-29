@@ -29,6 +29,15 @@ If you're rather interested in using the app, head to [Headpat](https://headpat.
         <br />
         UI, Frontend
       </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/thehairy">
+          <img src="https://avatars.githubusercontent.com/u/71461991?v=4?s=100" width="100px;" alt="thehairy"/>
+          <br />
+          <b>thehairy</b>
+        </a>
+        <br />
+        Emotional Support
+      </td>
     </tr>
   </tbody>
 </table>
